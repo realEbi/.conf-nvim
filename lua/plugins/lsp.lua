@@ -173,10 +173,7 @@ return {
         pyright = {},
         sqlls = {
           filetypes = { 'sql' },
-          root_dir = function(fname)
-            -- Use Neovim's built-in utility to find a root dir
-            return require('lspconfig').util.find_git_ancestor(fname) or vim.fn.getcwd()
-          end,
+          root_dir = require('lspconfig.util').root_pattern '*.sql',
         },
         -- jsonls = {},
         -- rust_analyzer = {},
@@ -229,10 +226,7 @@ return {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       require('lspconfig').sqls.setup {
         filetypes = { 'sql' },
-        root_dir = function(fname)
-          -- Use Neovim's built-in utility to find a root dir
-          return require('lspconfig').util.find_git_ancestor(fname) or vim.fn.getcwd()
-        end,
+        root_dir = require('lspconfig.util').root_pattern '*.sql',
         on_attach = function(client, bufnr)
           require('sqls').on_attach(client, bufnr)
         end,
