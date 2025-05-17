@@ -209,6 +209,14 @@ return {
       --
       --  You can press `g?` for help in this menu.
       require('mason').setup()
+      vim.diagnostic.config {
+        virtual_text = true,
+        signs = true,
+        update_in_insert = false,
+        underline = true,
+        severity_sort = false,
+        float = true,
+      }
 
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
