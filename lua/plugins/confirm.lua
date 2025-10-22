@@ -55,6 +55,7 @@ return {
         markdown = { 'prettier' },
         toml = { 'taplo' },
         sql = { 'sql_formatter' },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
         -- ['*'] = { 'codespell' },
 
         --

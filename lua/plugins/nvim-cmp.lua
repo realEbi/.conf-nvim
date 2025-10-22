@@ -35,7 +35,13 @@ return { -- Autocompletion
     'hrsh7th/cmp-path',
     'hrsh7th/cmp-buffer',
     'hrsh7th/cmp-cmdline',
+    'hrsh7th/cmp-nvim-lsp-signature-help',
     'neovim/nvim-lspconfig',
+    {
+      'prettier/vim-prettier',
+      run = 'yarn install --frozen-lockfile --production',
+      ft = { 'javascript', 'typescript', 'css', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html' },
+    },
   },
   config = function()
     -- See `:help cmp`
@@ -44,6 +50,14 @@ return { -- Autocompletion
     luasnip.config.setup {}
 
     cmp.setup {
+      formatting = {
+        format = function(entry, vim_item)
+          if entry.source.name == 'dbridge' then
+            return require('dbridge.cmp_format').build_format(entry, vim_item)
+          end
+          return vim_item
+        end,
+      },
       snippet = {
         expand = function(args)
           luasnip.lsp_expand(args.body)
@@ -116,6 +130,7 @@ return { -- Autocompletion
     }
     cmp.setup.filetype({ 'sql' }, {
       sources = {
+        { name = 'dbridge' },
         {
           name = 'lazydev',
           -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it

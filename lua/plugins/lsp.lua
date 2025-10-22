@@ -169,11 +169,14 @@ return {
       local servers = {
         -- clangd = {},
         gopls = {},
-        ruff = {},
+        ruff_lsp = {},
         pyright = {},
         sqlls = {
           filetypes = { 'sql' },
           root_dir = require('lspconfig.util').root_pattern '*.sql',
+          on_attach = function(client, bufnr)
+            require('sqls').on_attach(client, bufnr)
+          end,
         },
         -- jsonls = {},
         -- rust_analyzer = {},
@@ -197,6 +200,8 @@ return {
               },
               -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
               -- diagnostics = { disable = { 'missing-fields' } },
+              -- to disable complain about vim global object in neovim lua packages
+              diagnostics = { global = 'vim' },
             },
           },
         },
@@ -228,17 +233,18 @@ return {
         'ruff',
         'sql-formatter',
         'codespell',
-        'ruff',
         'bash-language-server',
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-      require('lspconfig').sqls.setup {
-        filetypes = { 'sql' },
-        root_dir = require('lspconfig.util').root_pattern '*.sql',
-        on_attach = function(client, bufnr)
-          require('sqls').on_attach(client, bufnr)
-        end,
-      }
+
+      -- Filter out 'ruff_lsp' because mason knows it as 'ruff'
+      local filtered_ensure_installed = {}
+      for _, pkg in ipairs(ensure_installed) do
+        if pkg ~= 'ruff_lsp' then
+          table.insert(filtered_ensure_installed, pkg)
+        end
+      end
+
+      require('mason-tool-installer').setup { ensure_installed = filtered_ensure_installed }
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
