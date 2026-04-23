@@ -40,8 +40,9 @@ opt.termguicolors = true
 -- code folding using treesitter
 -- Use expression-based folding
 opt.foldmethod = 'expr'
--- Use Treesitter for intelligent code folding
-opt.foldexpr = 'nvim_treesitter#foldexpr()'
+-- Use Neovim's built-in Treesitter folding (the old nvim-treesitter
+-- `nvim_treesitter#foldexpr()` was removed in the `main` branch rewrite).
+opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 -- disable autofold
 opt.foldenable = false
 
