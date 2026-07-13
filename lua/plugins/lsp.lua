@@ -213,6 +213,16 @@ return {
       --    :Mason
       --
       --  You can press `g?` for help in this menu.
+      -- Mason installs pip packages (ruff, codespell, ...) by creating a venv with
+      -- the first `python3` found in PATH. The system python lacks ensurepip, so
+      -- prepend a uv-managed python (which bundles it) for this nvim process only.
+      if vim.fn.executable 'uv' == 1 then
+        local uv_python = vim.fn.systemlist { 'uv', 'python', 'find', '--managed-python', '--no-project' }
+        if vim.v.shell_error == 0 and uv_python[1] and uv_python[1] ~= '' then
+          vim.env.PATH = vim.fs.dirname(uv_python[1]) .. ':' .. vim.env.PATH
+        end
+      end
+
       require('mason').setup()
       vim.diagnostic.config {
         virtual_text = true,
