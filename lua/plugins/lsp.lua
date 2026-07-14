@@ -169,7 +169,7 @@ return {
       local servers = {
         -- clangd = {},
         gopls = {},
-        ruff_lsp = {},
+        ruff = {},
         pyright = {},
         sqlls = {
           filetypes = { 'sql' },
@@ -240,21 +240,12 @@ return {
         'stylua', -- Used to format Lua code
         'prettier',
         'taplo',
-        'ruff',
         'sql-formatter',
         'codespell',
         'bash-language-server',
       })
 
-      -- Filter out 'ruff_lsp' because mason knows it as 'ruff'
-      local filtered_ensure_installed = {}
-      for _, pkg in ipairs(ensure_installed) do
-        if pkg ~= 'ruff_lsp' then
-          table.insert(filtered_ensure_installed, pkg)
-        end
-      end
-
-      require('mason-tool-installer').setup { ensure_installed = filtered_ensure_installed }
+      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
